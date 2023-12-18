@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import "./App.scss";
 import Card from "./components/card/card";
@@ -49,6 +49,16 @@ const App = () => {
     telegram.MainButton.text = "Sotib olsh :)";
     telegram.MainButton.show();
   };
+
+  const onSendData = useCallback(() => {
+    telegram.senData(JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  useEffect(() => {
+    telegram.onEvent("mainButtonClicked", onSendData);
+
+    return () => telegram.offEvent("mainButtonClicked", onSendData);
+  }, [onSendData]);
   return (
     <>
       <h1 className="heading">Kurslaim</h1>
